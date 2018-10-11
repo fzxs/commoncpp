@@ -46,6 +46,13 @@ namespace gtl
 			_total_size = 0;
 		}
 
+		~TLStringBuilder()
+		{
+			_container.clear();
+			std::list<string_t>().swap(_container);
+			_total_size = 0;
+		}
+
 	public:
 		TLStringBuilder & Append(const string_t &src) {
 			append(src);
