@@ -27,6 +27,13 @@ namespace gtl
 			_total_size += src.size();
 		}
 
+		void revoke()
+		{
+			string_t tmp = _container.back();
+			_container.pop_back();
+			_total_size -= tmp.size();
+		}
+
 	private:
 		// No copy constructor, no assignment.
 		TLStringBuilder(const TLStringBuilder &);
@@ -59,6 +66,16 @@ namespace gtl
 			return *this; 
 		}
 
+		TLStringBuilder & Revoke() {
+			revoke();
+			return *this;
+		}
+
+		size_type Length()
+		{
+			return _total_size;
+		}
+
 		template<class inputIterator>
 		TLStringBuilder & Add(const inputIterator &first, const inputIterator &afterLast) {
 			for (inputIterator f = first; f != afterLast; ++f) {
@@ -84,7 +101,8 @@ namespace gtl
 			string_t result;
 
 			result.reserve(_total_size + 1);
-			for (std::list<string_t>::const_iterator iter = _container.begin(); iter != _container.end(); ++iter) {
+			typename std::list<string_t>::const_iterator iter;
+			for (iter = _container.begin(); iter != _container.end(); ++iter) {
 				result += *iter;
 			}
 			return result;
