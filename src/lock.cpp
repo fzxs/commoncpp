@@ -1,5 +1,5 @@
 
-#include "lock.h"
+#include "commoncpp/lock.h"
 
 #include <time.h>
 

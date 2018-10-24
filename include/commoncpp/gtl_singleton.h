@@ -2,11 +2,14 @@
 #ifndef __GTL_SINGLETON_H_
 #define __GTL_SINGLETON_H_
 
+/* 单例模式 */
+
 #include <string>
 #include "lock.h"
 
 namespace gtl 
 {
+	/* 单例模式 */
 	template<typename T>
 	class TLSingleton
 	{

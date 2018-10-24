@@ -1,6 +1,8 @@
 
+#ifdef TEST
+
 #include <iostream>
-#include "gtl_stringbuilder.h"
+#include "commoncpp/gtl_stringbuilder.h"
 
 using namespace std;
 
@@ -26,7 +28,7 @@ int main()
 	return 0;
 }
 
-
+#endif
 
 
 
