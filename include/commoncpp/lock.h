@@ -1,12 +1,12 @@
-
+ï»¿
 #ifndef __LOCK_H_
 #define __LOCK_H_
 
-/*ËøÄ£¿é*/
+/*é”æ¨¡å—*/
 
 #include<pthread.h>
 
-//»¥³âËø
+//äº’æ–¥é”
 class CMutexLock
 {
 public:
@@ -23,7 +23,7 @@ protected:
 	pthread_mutex_t m_mutex;
 };
 
-//Ìõ¼şËø
+//æ¡ä»¶é”
 class CCondLock
 {
 public:
@@ -31,16 +31,16 @@ public:
 	virtual ~CCondLock();
 
 public:
-	//Ìõ¼şµÈ´ı
+	//æ¡ä»¶ç­‰å¾…
 	int wait();
 
-	//Ìõ¼şµÈ´ı
+	//æ¡ä»¶ç­‰å¾…
 	int timedwait(long sec, long nsec = 0);
 
-	//·¢ËÍĞÅºÅ
+	//å‘é€ä¿¡å·
 	int signal();
 
-	//¹ã²¥ĞÅºÅ
+	//å¹¿æ’­ä¿¡å·
 	int broadcast();
 
 private:
@@ -50,7 +50,7 @@ private:
 };
 
 
-//¶ÁĞ´Ëø
+//è¯»å†™é”
 class CReadWriteLock
 {
 public:
@@ -58,20 +58,20 @@ public:
 	~CReadWriteLock();
 
 public:
-	//»ñÈ¡¶ÁËø
+	//è·å–è¯»é”
 	void readLock();
 
-	//»ñÈ¡Ğ´Ëø
+	//è·å–å†™é”
 	void writeLock();
 
-	//ÊÍ·ÅËø
+	//é‡Šæ”¾é”
 	void unLock();
 
 private:
 	pthread_rwlock_t  m_rwlock;
 };
 
-//·¶Î§¶ÁËø
+//èŒƒå›´è¯»é”
 class CScopedReadLock
 {
 public:
@@ -88,7 +88,7 @@ private:
 	CReadWriteLock *m_mutex;
 };
 
-//·¶Î§Ğ´Ëø
+//èŒƒå›´å†™é”
 class CScopedWriteLock
 {
 public:

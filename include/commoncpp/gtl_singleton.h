@@ -1,22 +1,22 @@
-
+ï»¿
 #ifndef __GTL_SINGLETON_H_
 #define __GTL_SINGLETON_H_
 
-/* µ¥ÀıÄ£Ê½ */
+/* å•ä¾‹æ¨¡å¼ */
 
 #include <string>
 #include "lock.h"
 
 namespace gtl 
 {
-	/* µ¥ÀıÄ£Ê½ */
+	/* å•ä¾‹æ¨¡å¼ */
 	template<typename T>
 	class TLSingleton
 	{
 	public:
 		virtual ~TLSingleton() {}
 	public:
-		//´´½¨ÊµÀı¶ÔÏó
+		//åˆ›å»ºå®ä¾‹å¯¹è±¡
 		static T *getInstance();
 
 	private:
@@ -40,10 +40,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: getInstance
 	Date Created: 2018-10-12
-	 Description: ´´½¨ÊµÀı¶ÔÏó
+	 Description: åˆ›å»ºå®ä¾‹å¯¹è±¡
 		   Input: 
 		  Output: 
-		  Return: ÊµÀı¶ÔÏó
+		  Return: å®ä¾‹å¯¹è±¡
 		 Caution: 
 	*********************************************************/
 	template<typename T>
@@ -58,12 +58,7 @@ namespace gtl
 			if (NULL == _instance)
 			{
 				tmp = new T();
-				result = tmp->init();
-				if (result)
-				{
-					_mtx->unlock();
-					return NULL;
-				}
+				//å¦‚æœTæœ‰initæ–¹æ³•ï¼Œè¯·åœ¨mainå‡½æ•°ä¸­è°ƒç”¨Initæ–¹æ³•ï¼Œå½“ç„¶Initæ–¹æ³•ä¹Ÿå¯ä»¥éšæ„ä¼ å‚
 				_instance = tmp;
 			}
 			_mtx->unlock();
@@ -71,89 +66,6 @@ namespace gtl
 
 		return _instance;
 	}
-
-	/*-----------------------------------------------------------*/
-	/* ´ø²ÎÊıµÄµ¥Àı */
-	template<typename T>
-	class TLSingletonParam
-	{
-	public:
-		virtual ~TLSingletonParam() {}
-	public:
-		//´´½¨ÊµÀı¶ÔÏó
-		static T *getInstance();
-
-		//´´½¨ÊµÀı¶ÔÏó
-		static T *getInstance(std::string strTensorName, std::string strFile, bool bSeqlen);
-
-	private:
-		TLSingletonParam() {};
-		TLSingletonParam(TLSingletonParam &r);
-
-	private:
-		static T * _instance;
-		static CMutexLock * _mtx;
-	};
-
-	/************************************************************************/
-	/* TLSingletonParam                                                            
-	/************************************************************************/
-
-	template<typename T>
-	TLSingletonParam<T> * TLSingletonParam<T>::_instance = NULL;
-	template<typename T>
-	CMutexLock * TLSingletonParam<T>::_mtx = new CMutexLock;
-
-	/********************************************************
-	   Func Name: getInstance
-	Date Created: 2018-10-12
-	 Description: ´´½¨ÊµÀı¶ÔÏó
-		   Input: 
-		  Output: 
-		  Return: ÊµÀı¶ÔÏó
-		 Caution: 
-	*********************************************************/
-	template<typename T>
-	T * TLSingletonParam<T>::getInstance(std::string strTensorName, std::string strFile, bool bSeqlen)
-	{
-		T *tmp = NULL;
-		int result = 0;
-
-		if (NULL == _instance)
-		{
-			_mtx->lock();
-			if (NULL == _instance)
-			{
-				tmp = new T();
-				result = tmp->init(strTensorName, strFile, bSeqlen);
-				if (result)
-				{
-					_mtx->unlock();
-					return NULL;
-				}
-				_instance = tmp;
-			}
-			_mtx->unlock();
-		}
-
-		return _instance;
-	}
-
-	/********************************************************
-	   Func Name: getInstance
-	Date Created: 2018-10-12
-	 Description: ´´½¨ÊµÀı¶ÔÏó
-		   Input: 
-		  Output: 
-		  Return: ÊµÀı¶ÔÏó
-		 Caution: 
-	*********************************************************/
-	template<typename T>
-	T * TLSingletonParam<T>::getInstance()
-	{
-		return _instance;
-	}
-
 
 }
 

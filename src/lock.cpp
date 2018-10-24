@@ -1,4 +1,4 @@
-
+ï»¿
 #include "commoncpp/lock.h"
 
 #include <time.h>
@@ -6,7 +6,7 @@
 /********************************************************
    Func Name: CMutexLock
 Date Created: 2018-7-5
- Description: ¹¹Ôìº¯Êı
+ Description: æ„é€ å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -14,16 +14,16 @@ Date Created: 2018-7-5
 *********************************************************/
 CMutexLock::CMutexLock()
 {
-	//ÔİÊ±²»ĞèÒªÉè¼Æmutexattr£¬ÒÔºóÓĞĞèÒª»áÈÃÍâ²¿´«²ÎÉèÖÃmutexattr
+	//æš‚æ—¶ä¸éœ€è¦è®¾è®¡mutexattrï¼Œä»¥åæœ‰éœ€è¦ä¼šè®©å¤–éƒ¨ä¼ å‚è®¾ç½®mutexattr
 	pthread_mutexattr_t *mutexattr = NULL;
-	//³õÊ¼»¯Ëø
+	//åˆå§‹åŒ–é”
 	pthread_mutex_init(&m_mutex, mutexattr);
 }
 
 /********************************************************
    Func Name: ~CMutexLock
 Date Created: 2018-7-5
- Description: Îö¹¹º¯Êı
+ Description: ææ„å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -37,7 +37,7 @@ CMutexLock::~CMutexLock()
 /********************************************************
    Func Name: lock
 Date Created: 2018-7-5
- Description: ¼ÓËø
+ Description: åŠ é”
        Input: 
       Output: 
       Return: 
@@ -51,7 +51,7 @@ void CMutexLock::lock()
 /********************************************************
    Func Name: unlock
 Date Created: 2018-7-5
- Description: ½âËø
+ Description: è§£é”
        Input: 
       Output: 
       Return: 
@@ -64,14 +64,14 @@ void CMutexLock::unlock()
 
 /********************************************************
 
-CCondLockÀà
+CCondLockç±»
 
 *********************************************************/
 
 /********************************************************
    Func Name: CCondLock
 Date Created: 2018-7-5
- Description: ¹¹Ôìº¯Êı
+ Description: æ„é€ å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -87,7 +87,7 @@ CCondLock::CCondLock(CMutexLock * pclsMutex):m_clsMutex(pclsMutex)
 /********************************************************
    Func Name: ~CCondLock
 Date Created: 2018-7-5
- Description: Îö¹¹º¯Êı
+ Description: ææ„å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -101,7 +101,7 @@ CCondLock::~CCondLock()
 /********************************************************
    Func Name: wait
 Date Created: 2018-7-5
- Description: Ìõ¼şµÈ´ı
+ Description: æ¡ä»¶ç­‰å¾…
        Input: 
       Output: 
       Return: 
@@ -110,7 +110,7 @@ Date Created: 2018-7-5
 int CCondLock::wait()
 {
 	int result = 0;
-	//ÒòÎªwaitĞèÒª¼ÓËø£¬ËùÒÔ²»ĞèÒªµ£ĞÄÉèÖÃÍêm_signalWait»áÁ¢¿Ì·¢ËÍĞÅºÅ
+	//å› ä¸ºwaitéœ€è¦åŠ é”ï¼Œæ‰€ä»¥ä¸éœ€è¦æ‹…å¿ƒè®¾ç½®å®Œm_signalWaitä¼šç«‹åˆ»å‘é€ä¿¡å·
 	if (!m_signalWait)
 	{
 		m_signalWait = true;
@@ -123,7 +123,7 @@ int CCondLock::wait()
 /********************************************************
    Func Name: timedwait
 Date Created: 2018-7-5
- Description: ³¬Ê±Ìõ¼şµÈ´ı
+ Description: è¶…æ—¶æ¡ä»¶ç­‰å¾…
        Input: 
       Output: 
       Return: 
@@ -143,7 +143,7 @@ int CCondLock::timedwait(long sec, long nsec)
 	}
 	clock_gettime(CLOCK_REALTIME, &ts);
 	/*
-	pthread_cond_timedwaitµÄµÚÈı¸ö²ÎÊı»ñÈ¡µÄÊÇ¾ø¶ÔÊ±¼ä£¬²¢·ÇÏà¶ÔÊ±¼ä
+	pthread_cond_timedwaitçš„ç¬¬ä¸‰ä¸ªå‚æ•°è·å–çš„æ˜¯ç»å¯¹æ—¶é—´ï¼Œå¹¶éç›¸å¯¹æ—¶é—´
 	*/
 	ts.tv_sec += sec;
 	ts.tv_nsec += nsec;
@@ -156,7 +156,7 @@ int CCondLock::timedwait(long sec, long nsec)
 /********************************************************
    Func Name: signal
 Date Created: 2018-7-5
- Description: ·¢ËÍĞÅºÅ
+ Description: å‘é€ä¿¡å·
        Input: 
       Output: 
       Return: 
@@ -166,7 +166,7 @@ int CCondLock::signal()
 {
 	int result = 0;
 
-	//·ÀÖ¹ĞÅºÅ¶ªÊ§
+	//é˜²æ­¢ä¿¡å·ä¸¢å¤±
 	if (!m_signalWait)
 	{
 		return -1;
@@ -179,7 +179,7 @@ int CCondLock::signal()
 /********************************************************
    Func Name: broadcast
 Date Created: 2018-9-21
- Description: ¹ã²¥ĞÅºÅ
+ Description: å¹¿æ’­ä¿¡å·
        Input: 
       Output: 
       Return: 
@@ -192,14 +192,14 @@ int CCondLock::broadcast()
 
 /********************************************************
 
-CReadWriteLockÀà
+CReadWriteLockç±»
 
 *********************************************************/
 
 /********************************************************
    Func Name: CReadWriteLock
 Date Created: 2018-7-5
- Description: ¹¹Ôìº¯Êı
+ Description: æ„é€ å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -214,7 +214,7 @@ CReadWriteLock::CReadWriteLock()
 /********************************************************
    Func Name: ~CReadWriteLock
 Date Created: 2018-7-5
- Description: Îö¹¹º¯Êı
+ Description: ææ„å‡½æ•°
        Input: 
       Output: 
       Return: 
@@ -228,12 +228,12 @@ CReadWriteLock::~CReadWriteLock()
 /********************************************************
    Func Name: readLock
 Date Created: 2018-7-5
- Description: »ñÈ¡¶ÁËø
+ Description: è·å–è¯»é”
        Input: 
       Output: 
       Return: 
-     Caution:     Èç¹ûÆäËüÒ»¸öÏß³ÌÕ¼ÓĞĞ´Ëø£¬Ôòµ±Ç°Ïß³Ì±ØĞë
-	          µÈ´ıĞ´Ëø±»ÊÍ·Å£¬²ÅÄÜ¶Ô±£»¤×ÊÔ´½øĞĞ·ÃÎÊ 
+     Caution:     å¦‚æœå…¶å®ƒä¸€ä¸ªçº¿ç¨‹å æœ‰å†™é”ï¼Œåˆ™å½“å‰çº¿ç¨‹å¿…é¡»
+	          ç­‰å¾…å†™é”è¢«é‡Šæ”¾ï¼Œæ‰èƒ½å¯¹ä¿æŠ¤èµ„æºè¿›è¡Œè®¿é—® 
 *********************************************************/
 void CReadWriteLock::readLock()
 {
@@ -243,7 +243,7 @@ void CReadWriteLock::readLock()
 /********************************************************
    Func Name: writeLock
 Date Created: 2018-7-5
- Description: »ñÈ¡Ğ´Ëø
+ Description: è·å–å†™é”
        Input: 
       Output: 
       Return: 
@@ -257,7 +257,7 @@ void CReadWriteLock::writeLock()
 /********************************************************
    Func Name: unLock
 Date Created: 2018-7-5
- Description: ÊÍ·ÅĞ´Ëø
+ Description: é‡Šæ”¾å†™é”
        Input: 
       Output: 
       Return: 

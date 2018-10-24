@@ -2,23 +2,31 @@
 #ifdef TEST
 
 #include <iostream>
+
 #include "commoncpp/gtl_stringbuilder.h"
+#include "commoncpp/gtl_string_helper.h"
 
 using namespace std;
 
-
 void test()
 {
-	int i = 0;
-	gtl::TLStringBuilder<char> builder;
+	string str = "1,2,3,4,5";
+	vector<string> list;
+	vector<string>::iterator it;
+	int result = 0;
 
-	for (i = 0; i < 10; i++)
+	result = gtl::TStringHelper::split(str, ";", list);
+
+	if (result)
 	{
-		string str("hello");
-		builder.AppendLine(str);
+		cout << "error ." << endl;
+		return;
 	}
 
-	cout << builder.ToString() << endl;
+	for (it = list.begin();it != list.end();++it)
+	{
+		cout << *it << endl;
+	}
 }
 
 int main()
