@@ -14,8 +14,6 @@ namespace gtl
 	class TLSingleton
 	{
 	public:
-		virtual ~TLSingleton() {}
-	public:
 		//创建实例对象
 		static T *getInstance();
 
@@ -28,12 +26,12 @@ namespace gtl
 		static CMutexLock * _mtx;
 	};
 
-	/************************************************************************/
-	/* TLSingleton                                                            
-	/************************************************************************/
+	/************************************************************************
+	TLSingleton                                                            
+	************************************************************************/
 
 	template<typename T>
-	TLSingleton<T> * TLSingleton<T>::_instance = NULL;
+	T* TLSingleton<T>::_instance = NULL;
 	template<typename T>
 	CMutexLock * TLSingleton<T>::_mtx = new CMutexLock;
 
@@ -50,7 +48,6 @@ namespace gtl
 	T * TLSingleton<T>::getInstance()
 	{
 		T *tmp = NULL;
-		int result = 0;
 
 		if (NULL == _instance)
 		{
