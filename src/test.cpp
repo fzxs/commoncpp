@@ -5,28 +5,49 @@
 
 #include "commoncpp/gtl_stringbuilder.h"
 #include "commoncpp/gtl_string_helper.h"
+#include "commoncpp/redis_helper.h"
 
 using namespace std;
 
 void test()
 {
-	string str = "1,2,3,4,5";
-	vector<string> list;
-	vector<string>::iterator it;
 	int result = 0;
-
-	result = gtl::TStringHelper::split(str, ";", list);
-
-	if (result)
+	gtl::CRedisHandle *handle = gtl::CRedisHandle::connectTo("127.0.0.1", 6379);
+	if (NULL == handle)
 	{
-		cout << "error ." << endl;
+		printf("connectTo() error !\n");
 		return;
 	}
-
-	for (it = list.begin();it != list.end();++it)
+	result = handle->executeNonQuery("lpush mylist 1");
+	if (result)
 	{
-		cout << *it << endl;
+		printf("executeNonQuery() error !\n");
+		return;
 	}
+	result = handle->executeNonQuery("lpush mylist 2");
+	if (result)
+	{
+		printf("executeNonQuery() error !\n");
+		return;
+	}
+	result = handle->executeNonQuery("lpush mylist 3");
+	if (result)
+	{
+		printf("executeNonQuery() error !\n");
+		return;
+	}
+	gtl::CRedisDataReader reader = handle->executeReader("lrange mylist 0 10");
+
+	std::vector<gtl::CRedisDataReader>::iterator it;
+	for (it = reader.getList().begin(); it != reader.getList().end(); ++it)
+	{
+		if (gtl::CRedisDataReader::STRING == it->getType())
+		{
+			cout << it->getString() << endl;
+		}
+		
+	}
+
 }
 
 int main()

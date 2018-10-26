@@ -14,7 +14,7 @@ C_FLAGS=  -std=c11
 CXX_FLAGS= -std=c++11
 INC_PATH= -I ../include
 LIB_PATH=
-EXT_LIB= -lpthread
+EXT_LIB= -Wl,-rpath ../lib -L ../lib -lhiredis -lpthread
 
 PRG=test
 
