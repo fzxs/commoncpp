@@ -66,10 +66,42 @@ namespace gtl
 
 	};
 
+	/* redis事务类 */
+	/*
+	    单个 Redis 命令的执行是原子性的，但Redis没有在事务上增加任何维持原子性的机制，
+	所以Redis事务的执行并不是原子性的。
+	    事务可以理解为一个打包的批量执行脚本，但批量指令并非原子化的操作，
+	中间某条指令的失败不会导致前面已做指令的回滚，也不会造成后续的指令不做。
+	*/
+	class CRedisTransaction
+	{
+	public:
+		//开启事务
+		static CRedisTransaction * begin(CRedisHandle *handle);
+
+		//执行事务命令
+		int appendCmd(const char *cmd);
+
+		//关闭事务
+		CRedisDataReader end();
+
+	private:
+		CRedisTransaction(CRedisHandle *handle) :_handle(handle),_needRollback(false) {}
+		CRedisTransaction(CRedisTransaction &r);
+		static const char * begin_str;
+		static const char * exec_str;
+		static const char * state_str;
+
+	private:
+		CRedisHandle *_handle;
+		bool _needRollback;
+		std::vector<CRedisDataReader> _listResult;
+
+	};
+
 	/* redis句柄类 */
 	class CRedisHandle
 	{
-	public:
 	public:
 		static const char * ok_str;
 		~CRedisHandle();
@@ -77,11 +109,23 @@ namespace gtl
 		//连接服务器
 		static CRedisHandle * connectTo(const char *ip, uint16_t port);
 
+		//开启事务
+		CRedisTransaction *beginTransaction();
+
+		//结束事务
+		CRedisDataReader endTransaction(CRedisTransaction *transaction);
+
 		//无查询结果执行redis命令
 		int executeNonQuery(const char *cmd);
 
+		//执行redis命令,返回状态
+		std::string executeOperation(const char *cmd);
+
 		//执行redis命令，返回查询结果
 		CRedisDataReader executeReader(const char *cmd);
+
+		
+
 
 	private:
 		//组装集合数据

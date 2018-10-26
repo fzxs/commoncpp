@@ -66,6 +66,92 @@ namespace gtl
 	}
 
 	/********************************************************
+	CRedisTransaction
+	*********************************************************/
+	const char * CRedisTransaction::begin_str = "MULTI";
+	const char * CRedisTransaction::exec_str = "EXEC";
+	const char * CRedisTransaction::state_str = "QUEUED";
+
+	/********************************************************
+	   Func Name: begin
+	Date Created: 2018-10-26
+	 Description: 开始事务
+		   Input: 
+		  Output: 
+		  Return: 事务实例
+		 Caution: 
+	*********************************************************/
+	CRedisTransaction * CRedisTransaction::begin(CRedisHandle *handle)
+	{
+		CRedisTransaction * result = NULL;
+
+		result = new CRedisTransaction(handle);
+		if (NULL == result)
+		{
+			return NULL;
+		}
+		
+		//开启事务
+		if ("OK" != handle->executeOperation(begin_str))
+		{
+			return NULL;
+		}
+
+		return result;
+
+	}
+
+	/********************************************************
+	   Func Name: appendCmd
+	Date Created: 2018-10-26
+	 Description: 执行事务命令
+		   Input: 
+		  Output: 
+		  Return: error code
+		 Caution: 
+	*********************************************************/
+	int CRedisTransaction::appendCmd(const char *cmd)
+	{
+		std::string strRes;
+
+		if (NULL == cmd)
+		{
+			return -1;
+		}
+
+		if (state_str == _handle->executeOperation(cmd))
+		{
+			return 0;
+		}
+		_needRollback = true;
+
+		return -1;
+
+	}
+
+	/********************************************************
+	   Func Name: end
+	Date Created: 2018-10-26
+	 Description: 结束事务
+		   Input: 
+		  Output: 
+		  Return: 结果集
+		 Caution: 
+	*********************************************************/
+	CRedisDataReader CRedisTransaction::end()
+	{
+		CRedisDataReader reader;
+
+		if (_needRollback)
+		{
+			return reader;
+		}
+
+		return _handle->executeReader(exec_str);
+
+	}
+
+	/********************************************************
 	CRedisHandle
 	*********************************************************/
 	//const char * CRedisHandle::error_str;
@@ -123,6 +209,45 @@ namespace gtl
 	}
 
 	/********************************************************
+	   Func Name: beginTransaction
+	Date Created: 2018-10-26
+	 Description: 开启事务
+		   Input: 
+		  Output: 
+		  Return: 事务实例对象
+		 Caution: 
+	*********************************************************/
+	CRedisTransaction *CRedisHandle::beginTransaction()
+	{
+		return CRedisTransaction::begin(this);
+	}
+
+	/********************************************************
+	   Func Name: beginTransaction
+	Date Created: 2018-10-26
+	 Description: 结束事务
+		   Input: 
+		  Output: 
+		  Return: 结果集
+		 Caution: 
+	*********************************************************/
+	CRedisDataReader CRedisHandle::endTransaction(CRedisTransaction *transaction)
+	{
+		CRedisDataReader reader;
+
+		if (NULL == transaction)
+		{
+			return reader;
+		}
+		reader = transaction->end();
+		delete transaction;
+		transaction = NULL;
+
+		return reader;
+
+	}
+
+	/********************************************************
 	   Func Name: executeNonQuery
 	Date Created: 2018-10-26
 	 Description: 无查询结果执行redis命令
@@ -154,6 +279,40 @@ namespace gtl
 		freeReplyObject(data);
 
 		return result;
+	}
+
+	/********************************************************
+	   Func Name: executeOperation
+	Date Created: 2018-10-26
+	 Description: 执行redis命令,返回状态
+		   Input: 
+		  Output: 
+		  Return: 结果信息
+		 Caution: 
+	*********************************************************/
+	std::string CRedisHandle::executeOperation(const char *cmd)
+	{
+		std::string strRes;
+		redisReply *data = NULL;
+
+		if (NULL == cmd)
+		{
+			return "";
+		}
+		data = (redisReply *)redisCommand(_context, cmd);
+		if (NULL == data)
+		{
+			return "";
+		}
+
+		if (REDIS_REPLY_STATUS == data->type)
+		{
+			strRes = data->str;
+		}
+
+		freeReplyObject(data);
+
+		return strRes;
 	}
 
 	/********************************************************
