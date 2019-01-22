@@ -1,10 +1,11 @@
 ﻿
 #include "commoncpp/lock.h"
-
 #include <time.h>
 
+using namespace gtc;
+
 /********************************************************
-   Func Name: CMutexLock
+   Func Name: Mutex_Lock
 Date Created: 2018-7-5
  Description: 构造函数
        Input: 
@@ -12,16 +13,16 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CMutexLock::CMutexLock()
+Mutex_Lock::Mutex_Lock()
 {
 	//暂时不需要设计mutexattr，以后有需要会让外部传参设置mutexattr
-	pthread_mutexattr_t *mutexattr = NULL;
+	pthread_mutexattr_t *attr = NULL;
 	//初始化锁
-	pthread_mutex_init(&m_mutex, mutexattr);
+	::pthread_mutex_init(&this->_mtx, attr);
 }
 
 /********************************************************
-   Func Name: ~CMutexLock
+   Func Name: ~Mutex_Lock
 Date Created: 2018-7-5
  Description: 析构函数
        Input: 
@@ -29,9 +30,9 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CMutexLock::~CMutexLock()
+Mutex_Lock::~Mutex_Lock()
 {
-	pthread_mutex_destroy(&m_mutex);
+	::pthread_mutex_destroy(&this->_mtx);
 }
 
 /********************************************************
@@ -43,9 +44,9 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-void CMutexLock::lock()
+void Mutex_Lock::lock()
 {
-	pthread_mutex_lock(&m_mutex);
+	::pthread_mutex_lock(&this->_mtx);
 }
 
 /********************************************************
@@ -57,19 +58,17 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-void CMutexLock::unlock()
+void Mutex_Lock::unlock()
 {
-	pthread_mutex_unlock(&m_mutex);
+	::pthread_mutex_unlock(&this->_mtx);
 }
 
 /********************************************************
-
-CCondLock类
-
+Cond_Lock
 *********************************************************/
 
 /********************************************************
-   Func Name: CCondLock
+   Func Name: Cond_Lock
 Date Created: 2018-7-5
  Description: 构造函数
        Input: 
@@ -77,15 +76,14 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CCondLock::CCondLock(CMutexLock * pclsMutex):m_clsMutex(pclsMutex)
+Cond_Lock::Cond_Lock(Mutex_Lock mutex):_mutex(mutex)
 {
-	pthread_condattr_t *cond_attr = NULL;
-	pthread_cond_init(&m_cond, cond_attr);
-	m_signalWait = false;
+	pthread_condattr_t *attr = NULL;
+	::pthread_cond_init(&this->_cond, attr);
 }
 
 /********************************************************
-   Func Name: ~CCondLock
+   Func Name: ~Cond_Lock
 Date Created: 2018-7-5
  Description: 析构函数
        Input: 
@@ -93,9 +91,9 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CCondLock::~CCondLock()
+Cond_Lock::~Cond_Lock()
 {
-	pthread_cond_destroy(&m_cond);
+	::pthread_cond_destroy(&this->_cond);
 }
 
 /********************************************************
@@ -107,15 +105,11 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-int CCondLock::wait()
+int Cond_Lock::wait()
 {
 	int result = 0;
-	//因为wait需要加锁，所以不需要担心设置完m_signalWait会立刻发送信号
-	if (!m_signalWait)
-	{
-		m_signalWait = true;
-	}
-	result = pthread_cond_wait(&m_cond, &(m_clsMutex->m_mutex));
+
+	result = ::pthread_cond_wait(&this->_cond, &(this->_mutex._mtx));
 
 	return result;
 }
@@ -129,25 +123,18 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-int CCondLock::timedwait(long sec, long nsec)
+int Cond_Lock::timedwait(long sec, long nsec)
 {
 	struct timespec ts;
 	int result = 0;
 
-	ts.tv_sec = sec;
-	ts.tv_nsec = nsec;
-
-	if (!m_signalWait)
-	{
-		m_signalWait = true;
-	}
 	clock_gettime(CLOCK_REALTIME, &ts);
 	/*
-	pthread_cond_timedwait的第三个参数获取的是绝对时间，并非相对时间
+		pthread_cond_timedwait的第三个参数获取的是绝对时间，并非相对时间
 	*/
 	ts.tv_sec += sec;
 	ts.tv_nsec += nsec;
-	result = pthread_cond_timedwait(&m_cond, &(m_clsMutex->m_mutex), &ts);
+	result = ::pthread_cond_timedwait(&this->_cond, &(this->_mutex._mtx), &ts);
 
 	return result;
 
@@ -162,16 +149,12 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-int CCondLock::signal()
+int Cond_Lock::signal()
 {
 	int result = 0;
 
 	//防止信号丢失
-	if (!m_signalWait)
-	{
-		return -1;
-	}
-	result = pthread_cond_signal(&m_cond);
+	result = ::pthread_cond_signal(&this->_cond);
 
 	return result;
 }
@@ -185,19 +168,17 @@ Date Created: 2018-9-21
       Return: 
      Caution: 
 *********************************************************/
-int CCondLock::broadcast()
+int Cond_Lock::broadcast()
 {
-	return pthread_cond_broadcast(&m_cond);
+	return ::pthread_cond_broadcast(&this->_cond);
 }
 
 /********************************************************
-
-CReadWriteLock类
-
+RW_Lock
 *********************************************************/
 
 /********************************************************
-   Func Name: CReadWriteLock
+   Func Name: RW_Lock
 Date Created: 2018-7-5
  Description: 构造函数
        Input: 
@@ -205,14 +186,14 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CReadWriteLock::CReadWriteLock()
+RW_Lock::RW_Lock()
 {
 	pthread_rwlockattr_t *attr = NULL;
-	pthread_rwlock_init(&m_rwlock, attr);
+	::pthread_rwlock_init(&this->_rwlock, attr);
 }
 
 /********************************************************
-   Func Name: ~CReadWriteLock
+   Func Name: ~RW_Lock
 Date Created: 2018-7-5
  Description: 析构函数
        Input: 
@@ -220,9 +201,9 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-CReadWriteLock::~CReadWriteLock()
+RW_Lock::~RW_Lock()
 {
-	pthread_rwlock_destroy(&m_rwlock);
+	::pthread_rwlock_destroy(&this->_rwlock);
 }
 
 /********************************************************
@@ -235,9 +216,9 @@ Date Created: 2018-7-5
      Caution:     如果其它一个线程占有写锁，则当前线程必须
 	          等待写锁被释放，才能对保护资源进行访问 
 *********************************************************/
-void CReadWriteLock::readLock()
+void RW_Lock::readLock()
 {
-	pthread_rwlock_rdlock(&m_rwlock);
+	::pthread_rwlock_rdlock(&this->_rwlock);
 }
 
 /********************************************************
@@ -249,9 +230,9 @@ Date Created: 2018-7-5
       Return: 
      Caution:  
 *********************************************************/
-void CReadWriteLock::writeLock()
+void RW_Lock::writeLock()
 {
-	pthread_rwlock_wrlock(&m_rwlock);
+	::pthread_rwlock_wrlock(&this->_rwlock);
 }
 
 /********************************************************
@@ -263,9 +244,9 @@ Date Created: 2018-7-5
       Return: 
      Caution:  
 *********************************************************/
-void CReadWriteLock::unLock()
+void RW_Lock::unLock()
 {
-	pthread_rwlock_unlock(&m_rwlock);
+	::pthread_rwlock_unlock(&this->_rwlock);
 }
 
 
