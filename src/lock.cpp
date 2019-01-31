@@ -76,7 +76,7 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-Cond_Lock::Cond_Lock(Mutex_Lock mutex):_mutex(mutex)
+Cond_Lock::Cond_Lock(Mutex_Lock &mutex):_mutex(mutex)
 {
 	pthread_condattr_t *attr = NULL;
 	::pthread_cond_init(&this->_cond, attr);
