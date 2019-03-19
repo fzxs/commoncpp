@@ -1,24 +1,24 @@
-
+ï»¿
 #ifndef __REDIS_HELPER_H_
 #define __REDIS_HELPER_H_
 
 /*
 typedef struct redisReply {
-	int type;                       // ·µ»Ø½á¹ûÀàĞÍ
-	long long integer;              // ·µ»ØÀàĞÍÎªÕûĞÍµÄÊ±ºòµÄ·µ»ØÖµ
-	size_t len;                     // ×Ö·û´®³¤¶È 
-	char *str;                      // ·µ»Ø´íÎóÀàĞÍ»òÕß×Ö·ûÀàĞÍµÄ×Ö·û´® 
-	size_t elements;                // ·µ»ØÊı×éÀàĞÍÊ±£¬ÔªËØµÄÊıÁ¿
-	struct redisReply **element;    // ÔªËØ½á¹û¼¯ºÏ£¬redisReply¶ÔÏó 
+	int type;                       // è¿”å›ç»“æœç±»å‹
+	long long integer;              // è¿”å›ç±»å‹ä¸ºæ•´å‹çš„æ—¶å€™çš„è¿”å›å€¼
+	size_t len;                     // å­—ç¬¦ä¸²é•¿åº¦ 
+	char *str;                      // è¿”å›é”™è¯¯ç±»å‹æˆ–è€…å­—ç¬¦ç±»å‹çš„å­—ç¬¦ä¸² 
+	size_t elements;                // è¿”å›æ•°ç»„ç±»å‹æ—¶ï¼Œå…ƒç´ çš„æ•°é‡
+	struct redisReply **element;    // å…ƒç´ ç»“æœé›†åˆï¼ŒredisReplyå¯¹è±¡ 
 } redisReply;
 
-·µ»ØÀàĞÍÓĞÒÔÏÂ¼¸ÖÖ:
-REDIS_REPLY_STRING 1       //×Ö·û´®
-REDIS_REPLY_ARRAY 2        //Êı×é£¬¶à¸öreply£¬Í¨¹ıelementÊı×éÒÔ¼°elementsÊı×é´óĞ¡·ÃÎÊ
-REDIS_REPLY_INTEGER 3      //ÕûĞÍ
-REDIS_REPLY_NIL 4          //¿Õ£¬Ã»ÓĞÊı¾İ
-REDIS_REPLY_STATUS 5       //×´Ì¬£¬str×Ö·û´®ÒÔ¼°len
-REDIS_REPLY_ERROR 6        //´íÎó£¬Í¬STATUS
+è¿”å›ç±»å‹æœ‰ä»¥ä¸‹å‡ ç§:
+REDIS_REPLY_STRING 1       //å­—ç¬¦ä¸²
+REDIS_REPLY_ARRAY 2        //æ•°ç»„ï¼Œå¤šä¸ªreplyï¼Œé€šè¿‡elementæ•°ç»„ä»¥åŠelementsæ•°ç»„å¤§å°è®¿é—®
+REDIS_REPLY_INTEGER 3      //æ•´å‹
+REDIS_REPLY_NIL 4          //ç©ºï¼Œæ²¡æœ‰æ•°æ®
+REDIS_REPLY_STATUS 5       //çŠ¶æ€ï¼Œstrå­—ç¬¦ä¸²ä»¥åŠlen
+REDIS_REPLY_ERROR 6        //é”™è¯¯ï¼ŒåŒSTATUS
 
 */
 #include "commoncpp/hiredis/hiredis.h"
@@ -46,16 +46,16 @@ namespace gtl
 		};
 
 	public:
-		//»ñÈ¡ÕûĞÍÊı¾İ
+		//è·å–æ•´å‹æ•°æ®
 		int getInteger();
 
-		//»ñÈ¡×Ö·ûĞÍÊı¾İ
+		//è·å–å­—ç¬¦å‹æ•°æ®
 		std::string & getString();
 
-		//»ñÈ¡¼¯ºÏÊı¾İ
+		//è·å–é›†åˆæ•°æ®
 		std::vector<CRedisDataReader> & getList();
 
-		//»ñÈ¡Êı¾İÀàĞÍ
+		//è·å–æ•°æ®ç±»å‹
 		DATA_TYPE getType();
 
 	private:
@@ -66,23 +66,23 @@ namespace gtl
 
 	};
 
-	/* redisÊÂÎñÀà */
+	/* redisäº‹åŠ¡ç±» */
 	/*
-	    µ¥¸ö Redis ÃüÁîµÄÖ´ĞĞÊÇÔ­×ÓĞÔµÄ£¬µ«RedisÃ»ÓĞÔÚÊÂÎñÉÏÔö¼ÓÈÎºÎÎ¬³ÖÔ­×ÓĞÔµÄ»úÖÆ£¬
-	ËùÒÔRedisÊÂÎñµÄÖ´ĞĞ²¢²»ÊÇÔ­×ÓĞÔµÄ¡£
-	    ÊÂÎñ¿ÉÒÔÀí½âÎªÒ»¸ö´ò°üµÄÅúÁ¿Ö´ĞĞ½Å±¾£¬µ«ÅúÁ¿Ö¸Áî²¢·ÇÔ­×Ó»¯µÄ²Ù×÷£¬
-	ÖĞ¼äÄ³ÌõÖ¸ÁîµÄÊ§°Ü²»»áµ¼ÖÂÇ°ÃæÒÑ×öÖ¸ÁîµÄ»Ø¹ö£¬Ò²²»»áÔì³ÉºóĞøµÄÖ¸Áî²»×ö¡£
+	    å•ä¸ª Redis å‘½ä»¤çš„æ‰§è¡Œæ˜¯åŸå­æ€§çš„ï¼Œä½†Redisæ²¡æœ‰åœ¨äº‹åŠ¡ä¸Šå¢åŠ ä»»ä½•ç»´æŒåŸå­æ€§çš„æœºåˆ¶ï¼Œ
+	æ‰€ä»¥Redisäº‹åŠ¡çš„æ‰§è¡Œå¹¶ä¸æ˜¯åŸå­æ€§çš„ã€‚
+	    äº‹åŠ¡å¯ä»¥ç†è§£ä¸ºä¸€ä¸ªæ‰“åŒ…çš„æ‰¹é‡æ‰§è¡Œè„šæœ¬ï¼Œä½†æ‰¹é‡æŒ‡ä»¤å¹¶éåŸå­åŒ–çš„æ“ä½œï¼Œ
+	ä¸­é—´æŸæ¡æŒ‡ä»¤çš„å¤±è´¥ä¸ä¼šå¯¼è‡´å‰é¢å·²åšæŒ‡ä»¤çš„å›æ»šï¼Œä¹Ÿä¸ä¼šé€ æˆåç»­çš„æŒ‡ä»¤ä¸åšã€‚
 	*/
 	class CRedisTransaction
 	{
 	public:
-		//¿ªÆôÊÂÎñ
+		//å¼€å¯äº‹åŠ¡
 		static CRedisTransaction * begin(CRedisHandle *handle);
 
-		//Ö´ĞĞÊÂÎñÃüÁî
+		//æ‰§è¡Œäº‹åŠ¡å‘½ä»¤
 		int appendCmd(const char *cmd);
 
-		//¹Ø±ÕÊÂÎñ
+		//å…³é—­äº‹åŠ¡
 		CRedisDataReader end();
 
 	private:
@@ -99,40 +99,40 @@ namespace gtl
 
 	};
 
-	/* redis¾ä±úÀà */
+	/* rediså¥æŸ„ç±» */
 	class CRedisHandle
 	{
 	public:
 		static const char * ok_str;
 		~CRedisHandle();
 	public:
-		//Á¬½Ó·şÎñÆ÷
+		//è¿æ¥æœåŠ¡å™¨
 		static CRedisHandle * connectTo(const char *ip, uint16_t port);
 
-		//¿ªÆôÊÂÎñ
+		//å¼€å¯äº‹åŠ¡
 		CRedisTransaction *beginTransaction();
 
-		//½áÊøÊÂÎñ
+		//ç»“æŸäº‹åŠ¡
 		CRedisDataReader endTransaction(CRedisTransaction *transaction);
 
-		//ÎŞ²éÑ¯½á¹ûÖ´ĞĞredisÃüÁî
+		//æ— æŸ¥è¯¢ç»“æœæ‰§è¡Œrediså‘½ä»¤
 		int executeNonQuery(const char *cmd);
 
-		//Ö´ĞĞredisÃüÁî,·µ»Ø×´Ì¬
+		//æ‰§è¡Œrediså‘½ä»¤,è¿”å›çŠ¶æ€
 		std::string executeOperation(const char *cmd);
 
-		//Ö´ĞĞredisÃüÁî£¬·µ»Ø²éÑ¯½á¹û
+		//æ‰§è¡Œrediså‘½ä»¤ï¼Œè¿”å›æŸ¥è¯¢ç»“æœ
 		CRedisDataReader executeReader(const char *cmd);
 
 		
 
 
 	private:
-		//×é×°¼¯ºÏÊı¾İ
+		//ç»„è£…é›†åˆæ•°æ®
 		int formatList(redisReply *data, CRedisDataReader &reader);
 
 	private:
-		//½ûÖ¹Ê¹ÓÃ¹¹Ôìº¯Êı
+		//ç¦æ­¢ä½¿ç”¨æ„é€ å‡½æ•°
 		CRedisHandle(redisContext * context) :_context(context) {}
 		CRedisHandle(CRedisHandle &r);
 

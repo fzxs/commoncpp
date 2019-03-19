@@ -1,4 +1,4 @@
-
+ï»¿
 #include "commoncpp/redis_helper.h"
 
 #include <string.h>
@@ -12,10 +12,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: getInteger
 	Date Created: 2018-10-26
-	 Description: »ñÈ¡ÕûĞÍÊı¾İ
+	 Description: è·å–æ•´å‹æ•°æ®
 		   Input: 
 		  Output: 
-		  Return: ½á¹û
+		  Return: ç»“æœ
 		 Caution: 
 	*********************************************************/
 	int CRedisDataReader::getInteger()
@@ -26,10 +26,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: getString
 	Date Created: 2018-10-26
-	 Description: »ñÈ¡×Ö·ûĞÍÊı¾İ
+	 Description: è·å–å­—ç¬¦å‹æ•°æ®
 		   Input: 
 		  Output: 
-		  Return: ½á¹û
+		  Return: ç»“æœ
 		 Caution: 
 	*********************************************************/
 	std::string & CRedisDataReader::getString()
@@ -40,10 +40,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: getList
 	Date Created: 2018-10-26
-	 Description: »ñÈ¡¼¯ºÏÊı¾İ
+	 Description: è·å–é›†åˆæ•°æ®
 		   Input: 
 		  Output: 
-		  Return: ½á¹û
+		  Return: ç»“æœ
 		 Caution: 
 	*********************************************************/
 	std::vector<CRedisDataReader> & CRedisDataReader::getList()
@@ -54,10 +54,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: getList
 	Date Created: 2018-10-26
-	 Description: »ñÈ¡¼¯ºÏÊı¾İ
+	 Description: è·å–é›†åˆæ•°æ®
 		   Input: 
 		  Output: 
-		  Return: ½á¹û
+		  Return: ç»“æœ
 		 Caution: 
 	*********************************************************/
 	CRedisDataReader::DATA_TYPE CRedisDataReader::getType()
@@ -75,10 +75,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: begin
 	Date Created: 2018-10-26
-	 Description: ¿ªÊ¼ÊÂÎñ
+	 Description: å¼€å§‹äº‹åŠ¡
 		   Input: 
 		  Output: 
-		  Return: ÊÂÎñÊµÀı
+		  Return: äº‹åŠ¡å®ä¾‹
 		 Caution: 
 	*********************************************************/
 	CRedisTransaction * CRedisTransaction::begin(CRedisHandle *handle)
@@ -91,7 +91,7 @@ namespace gtl
 			return NULL;
 		}
 		
-		//¿ªÆôÊÂÎñ
+		//å¼€å¯äº‹åŠ¡
 		if ("OK" != handle->executeOperation(begin_str))
 		{
 			return NULL;
@@ -104,7 +104,7 @@ namespace gtl
 	/********************************************************
 	   Func Name: appendCmd
 	Date Created: 2018-10-26
-	 Description: Ö´ĞĞÊÂÎñÃüÁî
+	 Description: æ‰§è¡Œäº‹åŠ¡å‘½ä»¤
 		   Input: 
 		  Output: 
 		  Return: error code
@@ -132,10 +132,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: end
 	Date Created: 2018-10-26
-	 Description: ½áÊøÊÂÎñ
+	 Description: ç»“æŸäº‹åŠ¡
 		   Input: 
 		  Output: 
-		  Return: ½á¹û¼¯
+		  Return: ç»“æœé›†
 		 Caution: 
 	*********************************************************/
 	CRedisDataReader CRedisTransaction::end()
@@ -160,7 +160,7 @@ namespace gtl
 	/********************************************************
 	   Func Name: CRedisHandle
 	Date Created: 2018-10-26
-	 Description: ¹¹Ôìº¯Êı
+	 Description: æ„é€ å‡½æ•°
 		   Input: 
 		  Output: 
 		  Return: 
@@ -178,7 +178,7 @@ namespace gtl
 	/********************************************************
 	   Func Name: connectTo
 	Date Created: 2018-10-26
-	 Description: Á¬½Ó·şÎñÆ÷
+	 Description: è¿æ¥æœåŠ¡å™¨
 		   Input: 
 		  Output: 
 		  Return: error code
@@ -187,9 +187,9 @@ namespace gtl
 	CRedisHandle * CRedisHandle::connectTo(const char *ip, uint16_t port)
 	{
 		/*
-		º¯ÊıÔ­ĞÍ£ºredisContext *redisConnect(const char *ip, int port);
-		ËµÃ÷£º¸Ãº¯ÊıÓÃÀ´Á¬½ÓredisÊı¾İ¿â£¬²ÎÊıÎªÊı¾İ¿âµÄipµØÖ·ºÍ¶Ë¿Ú£¬Í¨³£Ä¬ÈÏ¶Ë¿ÚÎª6379¡£
-		¸Ãº¯Êı·µ»ØÒ»¸öredisContext¶ÔÏó¡£
+		å‡½æ•°åŸå‹ï¼šredisContext *redisConnect(const char *ip, int port);
+		è¯´æ˜ï¼šè¯¥å‡½æ•°ç”¨æ¥è¿æ¥redisæ•°æ®åº“ï¼Œå‚æ•°ä¸ºæ•°æ®åº“çš„ipåœ°å€å’Œç«¯å£ï¼Œé€šå¸¸é»˜è®¤ç«¯å£ä¸º6379ã€‚
+		è¯¥å‡½æ•°è¿”å›ä¸€ä¸ªredisContextå¯¹è±¡ã€‚
 		*/
 		CRedisHandle *handle = NULL;
 		redisContext *context = NULL;
@@ -211,10 +211,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: beginTransaction
 	Date Created: 2018-10-26
-	 Description: ¿ªÆôÊÂÎñ
+	 Description: å¼€å¯äº‹åŠ¡
 		   Input: 
 		  Output: 
-		  Return: ÊÂÎñÊµÀı¶ÔÏó
+		  Return: äº‹åŠ¡å®ä¾‹å¯¹è±¡
 		 Caution: 
 	*********************************************************/
 	CRedisTransaction *CRedisHandle::beginTransaction()
@@ -225,10 +225,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: beginTransaction
 	Date Created: 2018-10-26
-	 Description: ½áÊøÊÂÎñ
+	 Description: ç»“æŸäº‹åŠ¡
 		   Input: 
 		  Output: 
-		  Return: ½á¹û¼¯
+		  Return: ç»“æœé›†
 		 Caution: 
 	*********************************************************/
 	CRedisDataReader CRedisHandle::endTransaction(CRedisTransaction *transaction)
@@ -250,10 +250,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: executeNonQuery
 	Date Created: 2018-10-26
-	 Description: ÎŞ²éÑ¯½á¹ûÖ´ĞĞredisÃüÁî
+	 Description: æ— æŸ¥è¯¢ç»“æœæ‰§è¡Œrediså‘½ä»¤
 		   Input: 
 		  Output: 
-		  Return: ½á¹ûĞÅÏ¢
+		  Return: ç»“æœä¿¡æ¯
 		 Caution: 
 	*********************************************************/
 	int CRedisHandle::executeNonQuery(const char *cmd)
@@ -284,10 +284,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: executeOperation
 	Date Created: 2018-10-26
-	 Description: Ö´ĞĞredisÃüÁî,·µ»Ø×´Ì¬
+	 Description: æ‰§è¡Œrediså‘½ä»¤,è¿”å›çŠ¶æ€
 		   Input: 
 		  Output: 
-		  Return: ½á¹ûĞÅÏ¢
+		  Return: ç»“æœä¿¡æ¯
 		 Caution: 
 	*********************************************************/
 	std::string CRedisHandle::executeOperation(const char *cmd)
@@ -318,10 +318,10 @@ namespace gtl
 	/********************************************************
 	   Func Name: executeReader
 	Date Created: 2018-10-26
-	 Description: Ö´ĞĞredisÃüÁî£¬·µ»Ø²éÑ¯½á¹û
+	 Description: æ‰§è¡Œrediså‘½ä»¤ï¼Œè¿”å›æŸ¥è¯¢ç»“æœ
 		   Input: 
 		  Output: 
-		  Return: ½á¹ûĞÅÏ¢
+		  Return: ç»“æœä¿¡æ¯
 		 Caution: 
 	*********************************************************/
 	CRedisDataReader CRedisHandle::executeReader(const char *cmd)
@@ -368,7 +368,7 @@ namespace gtl
 	/********************************************************
 	   Func Name: formatList
 	Date Created: 2018-10-26
-	 Description: ¸ñÊ½»¯Êı×éÊı¾İ
+	 Description: æ ¼å¼åŒ–æ•°ç»„æ•°æ®
 		   Input: 
 		  Output: 
 		  Return: error code

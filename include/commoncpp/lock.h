@@ -167,7 +167,4 @@ namespace gtc
 	};
 }
 
-
-
-
 #endif

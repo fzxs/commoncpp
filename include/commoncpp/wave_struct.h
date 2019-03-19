@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef __WAVE_STRUCT_H_
 #define __WAVE_STRUCT_H_
 
@@ -7,7 +7,7 @@
 #include <string.h>
 
 /*
-    Êı¾İ¸ñÊ½ÎªPCMµÄWAVÎÄ¼şÍ·
+    æ•°æ®æ ¼å¼ä¸ºPCMçš„WAVæ–‡ä»¶å¤´
     --------------------------------
     | Base_chunk | RIFF |
     ---------------------
@@ -33,18 +33,18 @@ namespace assist
 	struct BaseChunk {
 
 		FOURCC fcc;        // FourCC id
-		uint32_t cb_size;  // Êı¾İÓòµÄ´óĞ¡
+		uint32_t cb_size;  // æ•°æ®åŸŸçš„å¤§å°
 	};
 
 	struct STWaveFMT
 	{
-		uint16_t format_tag;      // WAVEµÄÊı¾İ¸ñÊ½£¬PCMÊı¾İ¸ÃÖµÎª1
-		uint16_t channels;        // ÉùµÀÊı
-		uint32_t sample_per_sec;  // ²ÉÑùÂÊ
-		uint32_t bytes_per_sec;   // ÂëÂÊ£¬channels * sample_per_sec * bits_per_sample / 8
-		uint16_t block_align;     // ÒôÆµÊı¾İ¿é£¬Ã¿´Î²ÉÑù´¦ÀíµÄÊı¾İ´óĞ¡£¬channels * bits_per_sample / 8
-		uint16_t bits_per_sample; // Á¿»¯Î»Êı£¬8¡¢16¡¢32µÈ
-		//uint16_t ex_size;         // À©Õ¹¿éµÄ´óĞ¡£¬¸½¼Ó¿éµÄ´óĞ¡
+		uint16_t format_tag;      // WAVEçš„æ•°æ®æ ¼å¼ï¼ŒPCMæ•°æ®è¯¥å€¼ä¸º1
+		uint16_t channels;        // å£°é“æ•°
+		uint32_t sample_per_sec;  // é‡‡æ ·ç‡
+		uint32_t bytes_per_sec;   // ç ç‡ï¼Œchannels * sample_per_sec * bits_per_sample / 8
+		uint16_t block_align;     // éŸ³é¢‘æ•°æ®å—ï¼Œæ¯æ¬¡é‡‡æ ·å¤„ç†çš„æ•°æ®å¤§å°ï¼Œchannels * bits_per_sample / 8
+		uint16_t bits_per_sample; // é‡åŒ–ä½æ•°ï¼Œ8ã€16ã€32ç­‰
+		//uint16_t ex_size;         // æ‰©å±•å—çš„å¤§å°ï¼Œé™„åŠ å—çš„å¤§å°
 
 		STWaveFMT()
 		{
@@ -63,7 +63,7 @@ namespace assist
 			sample_per_sec = sample_rate;
 			bits_per_sample = sample_bits;
 			format_tag = 0x01;                                                // PCM format data
-			bytes_per_sec = channels * sample_per_sec * bits_per_sample / 8;  // ÂëÂÊ
+			bytes_per_sec = channels * sample_per_sec * bits_per_sample / 8;  // ç ç‡
 			block_align = channels * bits_per_sample / 8;
 			//ex_size = 0;                                                     // don't use extension field
 		}
@@ -92,7 +92,7 @@ namespace assist
 	};
 
 	/*
-	Ê¹ÓÃÊ¾Àı
+	ä½¿ç”¨ç¤ºä¾‹
 	    assist::STWaveHeader header(nb_channel, sample_rate, sample_bits);
 		header.riff.cb_size = audioSize + WAVE_HEAD_SIZE + sizeof(header.data) - sizeof(header.riff);
 		header.data.cb_size = audioSize;
