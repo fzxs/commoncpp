@@ -2,8 +2,8 @@
 #ifndef __GTL_STRINGBUILDER_H_
 #define __GTL_STRINGBUILDER_H_
 
-#include <list>
 #include <string>
+#include <list>
 
 /*
 注意：模板类型有要求(并非任意类型，这是由std::basic_string类模板决定的):
@@ -56,7 +56,6 @@ namespace gtl
 		~TLStringBuilder()
 		{
 			_container.clear();
-			std::list<string_t>().swap(_container);
 			_total_size = 0;
 		}
 
@@ -69,6 +68,12 @@ namespace gtl
 		TLStringBuilder & Revoke() {
 			revoke();
 			return *this;
+		}
+
+		void clean()
+		{
+			_container.clear();
+			_total_size = 0;
 		}
 
 		size_type Length()
