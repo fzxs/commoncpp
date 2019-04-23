@@ -2,79 +2,116 @@
 #ifndef __GTL_STRINGBUILDER_H_
 #define __GTL_STRINGBUILDER_H_
 
-#include <string.h>
+#include <list>
 #include <string>
 
-#include "buf.h"
+/*
+注意：模板类型有要求(并非任意类型，这是由std::basic_string类模板决定的):
+    与类型定义的专用化字符串类型元素的char， wstring，为wchar_t， u16string为char16_t，和u32string为char32_t。
+*/
 
 namespace gtl 
 {
-    class StringBuilder
-    {
-    public:
-        StringBuilder & Append(const std::string &str)
-        {
-            this->append(str);
-            return *this;
-        }
+	/* 字符串拼接类 */
+	template <typename chr>
+	class TLStringBuilder {
+	private:
+		typedef std::basic_string<chr> string_t;
+		typedef std::list<string_t> container_t;
+		typedef typename string_t::size_type size_type;
+		container_t _container;
+		size_type _total_size;
+		void append(const string_t &src)
+		{
+			_container.push_back(src);
+			_total_size += src.size();
+		}
 
-        StringBuilder & Revoke(unsigned int size) 
-        {
-            if (size < this->_buffer.readableBytes())
-            {
-                this->revoke(size);
-            }
-            return *this;
-        }
+		void revoke()
+		{
+			string_t tmp = _container.back();
+			_container.pop_back();
+			_total_size -= tmp.size();
+		}
 
-        StringBuilder & AppendLine(const std::string &str) 
-        {
-            static char lineFeed[]{ 10, 0 }; // C++ 11
+	private:
+		// No copy constructor, no assignment.
+		TLStringBuilder(const TLStringBuilder &);
+		TLStringBuilder & operator= (const TLStringBuilder &);
 
-            this->append(str);
-            this->append(lineFeed);
+	public:
+		TLStringBuilder(const string_t &src)
+		{
+			if (!src.empty()) {
+				_container.push_back(src);
+			}
+			_total_size = src.size();
+		}
 
-            return *this;
-        }
+		TLStringBuilder()
+		{
+			_total_size = 0;
+		}
 
-        StringBuilder & AppendLine() 
-        {
-            static char lineFeed[]{ 10, 0 };
+		~TLStringBuilder()
+		{
+			_container.clear();
+			std::list<string_t>().swap(_container);
+			_total_size = 0;
+		}
 
-            this->append(lineFeed);
-            return *this;
-        }
+	public:
+		TLStringBuilder & Append(const string_t &src) {
+			append(src);
+			return *this; 
+		}
 
-        void Clear()
-        {
-            this->_buffer.retrieveAll();
-        }
+		TLStringBuilder & Revoke() {
+			revoke();
+			return *this;
+		}
 
-        std::string ToString() const 
-        {
-            return std::string((const char *)this->_buffer.peek(), this->_buffer.readableBytes());
-        }
+		size_type Length()
+		{
+			return _total_size;
+		}
 
-        unsigned int Length()
-        {
-            return this->_buffer.readableBytes();
-        }
+		template<class inputIterator>
+		TLStringBuilder & Add(const inputIterator &first, const inputIterator &afterLast) {
+			for (inputIterator f = first; f != afterLast; ++f) {
+				append(*f);
+			}
+			return *this; 
+		}
 
-    private:
-        void append(const std::string &str)
-        {
-            this->_buffer.append(str.c_str(), str.length());
-        }
+		TLStringBuilder & AppendLine(const string_t &src) {
+			static chr lineFeed[]{ 10, 0 }; // C++ 11
+			_container.push_back(src + lineFeed);
+			_total_size += 1 + src.size();
+			return *this; 
+		}
+		TLStringBuilder & AppendLine() {
+			static chr lineFeed[]{ 10, 0 };
+			_container.push_back(lineFeed);
+			_total_size++;
+			return *this; 
+		}
 
-        void revoke(unsigned int size)
-        {
-            this->_buffer.unwrite(size);
-        }
+		string_t ToString() const {
+			string_t result;
 
-    private:
-        Buffer _buffer;
+			result.reserve(_total_size + 1);
+			typename std::list<string_t>::const_iterator iter;
+			for (iter = _container.begin(); iter != _container.end(); ++iter) {
+				result += *iter;
+			}
+			return result;
+		}
 
-    };
+	};
 }
 
 #endif
+
+
+
