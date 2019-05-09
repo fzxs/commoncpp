@@ -43,7 +43,7 @@ namespace gtl
 		}
 
 		//构造函数
-		explicit TimeValue(const struct timespec &ts) :_sec(ts.tv_sec), _usec(tv.tv_nsec / 1000) 
+		explicit TimeValue(const struct timespec &ts) :_sec(ts.tv_sec), _usec(ts.tv_nsec / 1000) 
 		{
 		}
 
@@ -83,8 +83,8 @@ namespace gtl
 		//set
 		void set(const struct timespec &ts)
 		{
-			this->_sec = tv.tv_sec;
-			this->_usec = tv.tv_nsec / 1000;
+			this->_sec = ts.tv_sec;
+			this->_usec = ts.tv_nsec / 1000;
 		}
 
 		//加法运算

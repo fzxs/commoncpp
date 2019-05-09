@@ -209,7 +209,7 @@ TimeValue TimeValue::now()
 {
 	struct timeval tv;
 
-	if (::gettimeofday(&tv, NULL))
+	if (!::gettimeofday(&tv, NULL))
 	{
 		return TimeValue(tv);
 	}
